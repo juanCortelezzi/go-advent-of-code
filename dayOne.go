@@ -1,17 +1,13 @@
 package main
 
 import (
-	_ "embed"
 	"log"
 	"slices"
 	"strconv"
 	"strings"
 )
 
-//go:embed inputs/day_one.txt
-var input string
-
-func getListsFromInput() ([]int, []int) {
+func getListsFromInput(input string) ([]int, []int) {
 
 	listLeft := make([]int, 0, 100)
 	listRight := make([]int, 0, 100)
@@ -25,12 +21,12 @@ func getListsFromInput() ([]int, []int) {
 
 		intLeft, err := strconv.Atoi(itemLeft)
 		if err != nil {
-			log.Fatalf("item '%s' can not be converted to integer", itemLeft)
+			log.Fatalf("item '%s' can not be converted to integer\n", itemLeft)
 		}
 
 		intRight, err := strconv.Atoi(itemRight)
 		if err != nil {
-			log.Fatalf("item '%s' can not be converted to integer", itemRight)
+			log.Fatalf("item '%s' can not be converted to intege\n", itemRight)
 		}
 
 		listLeft = append(listLeft, intLeft)
@@ -39,7 +35,7 @@ func getListsFromInput() ([]int, []int) {
 
 	if len(listLeft) != len(listRight) {
 		log.Fatalf(
-			"list length mismatch: len(listA) = %d and len(listB) = %d",
+			"list length mismatch: len(listA) = %d and len(listB) = %d\n",
 			len(listLeft),
 			len(listRight),
 		)
@@ -48,8 +44,8 @@ func getListsFromInput() ([]int, []int) {
 	return listLeft, listRight
 }
 
-func DayOnePartOne() {
-	listLeft, listRight := getListsFromInput()
+func DayOnePartOne(input string) int {
+	listLeft, listRight := getListsFromInput(input)
 
 	slices.Sort(listLeft)
 	slices.Sort(listRight)
@@ -67,11 +63,11 @@ func DayOnePartOne() {
 		result += itemRight - itemLeft
 	}
 
-	log.Printf("result: %d", result)
+	return result
 }
 
-func DayOnePartTwo() {
-	listLeft, listRight := getListsFromInput()
+func DayOnePartTwo(input string) int {
+	listLeft, listRight := getListsFromInput(input)
 
 	listRightFrequency := make(map[int]int, len(listRight))
 	for _, item := range listRight {
@@ -83,5 +79,5 @@ func DayOnePartTwo() {
 		result += item * listRightFrequency[item]
 	}
 
-	log.Printf("result: %d", result)
+	return result
 }
