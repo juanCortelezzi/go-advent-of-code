@@ -11,6 +11,8 @@ import (
 var dayAndPartToFunc = map[int]func(input string) int{
 	11: DayOnePartOne,
 	12: DayOnePartTwo,
+	21: DayTwoPartOne,
+	22: DayTwoPartTwo,
 }
 
 func main() {
@@ -54,6 +56,11 @@ func main() {
 	}
 
 	dayAndPart := day*10 + part
-	result := dayAndPartToFunc[dayAndPart](string(input))
+	fn, found := dayAndPartToFunc[dayAndPart]
+	if !found {
+		log.Fatalf("Could not find implementation for day %d part %d\n", day, part)
+	}
+
+	result := fn(string(input))
 	log.Printf("the result for day %d part %d is: %d\n", day, part, result)
 }
