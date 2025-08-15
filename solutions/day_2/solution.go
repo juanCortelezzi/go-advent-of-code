@@ -1,4 +1,4 @@
-package main
+package dayTwo
 
 import (
 	"log"
@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func DayTwoPartOne(input string) int {
+func PartOne(input string) int {
 	reports := strings.SplitSeq(strings.TrimSpace(input), "\n")
 	safeCount := 0
 	for report := range reports {
@@ -77,7 +77,7 @@ func DayTwoPartOne(input string) int {
 	return safeCount
 }
 
-func DayTwoPartTwo(input string) int {
+func PartTwo(input string) int {
 	reports := strings.SplitSeq(strings.TrimSpace(input), "\n")
 	safeCount := 0
 	for reportString := range reports {

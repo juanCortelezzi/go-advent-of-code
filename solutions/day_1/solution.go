@@ -1,4 +1,4 @@
-package main
+package dayOne
 
 import (
 	"log"
@@ -44,7 +44,7 @@ func getListsFromInput(input string) ([]int, []int) {
 	return listLeft, listRight
 }
 
-func DayOnePartOne(input string) int {
+func PartOne(input string) int {
 	listLeft, listRight := getListsFromInput(input)
 
 	slices.Sort(listLeft)
@@ -66,7 +66,7 @@ func DayOnePartOne(input string) int {
 	return result
 }
 
-func DayOnePartTwo(input string) int {
+func PartTwo(input string) int {
 	listLeft, listRight := getListsFromInput(input)
 
 	listRightFrequency := make(map[int]int, len(listRight))

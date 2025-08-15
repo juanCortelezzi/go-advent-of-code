@@ -6,13 +6,19 @@ import (
 	"log"
 	"os"
 	"strconv"
+
+	dayOne "github.com/juancortelezzi/goaoc/solutions/day_1"
+	dayTwo "github.com/juancortelezzi/goaoc/solutions/day_2"
+	dayThree "github.com/juancortelezzi/goaoc/solutions/day_3"
 )
 
 var dayAndPartToFunc = map[int]func(input string) int{
-	11: DayOnePartOne,
-	12: DayOnePartTwo,
-	21: DayTwoPartOne,
-	22: DayTwoPartTwo,
+	11: dayOne.PartOne,
+	12: dayOne.PartTwo,
+	21: dayTwo.PartOne,
+	22: dayTwo.PartTwo,
+	31: dayThree.PartOne,
+	32: dayThree.PartTwo,
 }
 
 func main() {
