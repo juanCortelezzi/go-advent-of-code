@@ -2,6 +2,7 @@ package dayFour
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 )
 
@@ -30,7 +31,7 @@ func coordsToString(letters []string, relativeDirection [][]int, xRow, xCol int)
 	return result, nil
 }
 
-var clockWiseRelativeDirections = [][][]int{
+var clockWiseAllRelativeDirections = [][][]int{
 	{{-1, 0}, {-2, 0}, {-3, 0}},
 	{{-1, 1}, {-2, 2}, {-3, 3}},
 	{{0, 1}, {0, 2}, {0, 3}},
@@ -43,7 +44,7 @@ var clockWiseRelativeDirections = [][][]int{
 
 func findXmasCountAround(letters []string, xRow, xCol int) int {
 	count := 0
-	for _, relativeDirection := range clockWiseRelativeDirections {
+	for _, relativeDirection := range clockWiseAllRelativeDirections {
 		result, err := coordsToString(letters, relativeDirection, xRow, xCol)
 		if err != nil {
 			continue
@@ -66,6 +67,44 @@ func PartOne(input string) int {
 			char := letters[row][col]
 			if char == 'X' {
 				count += findXmasCountAround(letters, row, col)
+			}
+		}
+	}
+
+	return count
+}
+
+func hasValidPatternAround(letters []string, aRow, aCol int) bool {
+	str, err := coordsToString(
+		letters,
+		[][]int{{-1, -1}, {-1, 1}, {1, 1}, {1, -1}},
+		aRow,
+		aCol,
+	)
+
+	if err != nil {
+		return false
+	}
+
+	validPatterns := []string{
+		"MMSS",
+		"SMMS",
+		"SSMM",
+		"MSSM",
+	}
+
+	return slices.Contains(validPatterns, str)
+}
+
+func PartTwo(input string) int {
+	letters := parseInput(input)
+
+	count := 0
+	for row := range letters {
+		for col := range letters[row] {
+			char := letters[row][col]
+			if char == 'A' && hasValidPatternAround(letters, row, col) {
+				count += 1
 			}
 		}
 	}
