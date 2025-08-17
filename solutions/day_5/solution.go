@@ -85,8 +85,7 @@ func parseRules(rules string) ([]int, []int) {
 	return xs, ys
 }
 
-func isValidManual(manual []int, xs []int, ys []int) bool {
-	log.Printf("checking manual: %#v\n", manual)
+func getValidRulesForManual(manual []int, xs, ys []int) ([]int, []int) {
 	xsValid := make([]int, 0)
 	ysValid := make([]int, 0)
 	for ruleIndex := range len(xs) {
@@ -98,7 +97,11 @@ func isValidManual(manual []int, xs []int, ys []int) bool {
 			ysValid = append(ysValid, y)
 		}
 	}
+	return xsValid, ysValid
+}
 
+func isValidManual(manual []int, xs []int, ys []int) bool {
+	log.Printf("checking manual: %#v\n", manual)
 	for pageIndex, page := range manual {
 		for xIndex, x := range xs {
 			if x != page {
@@ -111,16 +114,16 @@ func isValidManual(manual []int, xs []int, ys []int) bool {
 			}
 		}
 
-		for yIndex, y := range ys {
-			if y != page {
-				continue
-			}
-			x := xs[yIndex]
-			if slices.Contains(manual[pageIndex+1:], x) {
-				log.Printf("page %d failed after rule: %d|%d\n", page, x, y)
-				return false
-			}
-		}
+		// for yIndex, y := range ys {
+		// 	if y != page {
+		// 		continue
+		// 	}
+		// 	x := xs[yIndex]
+		// 	if slices.Contains(manual[pageIndex+1:], x) {
+		// 		log.Printf("page %d failed after rule: %d|%d\n", page, x, y)
+		// 		return false
+		// 	}
+		// }
 	}
 
 	return true
@@ -131,7 +134,8 @@ func PartOne(input string) int {
 
 	result := 0
 	for _, manual := range data.manuals {
-		if isValidManual(manual, data.xs, data.ys) {
+		xsValid, ysValid := getValidRulesForManual(manual, data.xs, data.ys)
+		if isValidManual(manual, xsValid, ysValid) {
 			midNumber := manual[(len(manual)-1)>>1]
 			log.Printf("manual %#v is valid, mid number: %d\n", manual, midNumber)
 			result += midNumber
@@ -142,5 +146,31 @@ func PartOne(input string) int {
 }
 
 func PartTwo(input string) int {
-	return 0
+	data := parseInput(input)
+
+	result := 0
+	for _, manual := range data.manuals {
+		xsValid, ysValid := getValidRulesForManual(manual, data.xs, data.ys)
+		if isValidManual(manual, xsValid, ysValid) {
+			continue
+		}
+
+		slices.SortFunc(manual, func(a, b int) int {
+			for index := range len(xsValid) {
+				x := xsValid[index]
+				y := ysValid[index]
+
+				if x == a && y == b {
+					return -1
+				}
+			}
+			return 0
+		})
+
+		midNumber := manual[(len(manual)-1)>>1]
+		log.Printf("manual %#v is valid, mid number: %d\n", manual, midNumber)
+		result += midNumber
+	}
+
+	return result
 }
