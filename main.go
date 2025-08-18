@@ -12,6 +12,7 @@ import (
 	dayThree "github.com/juancortelezzi/goaoc/solutions/day_3"
 	dayFour "github.com/juancortelezzi/goaoc/solutions/day_4"
 	dayFive "github.com/juancortelezzi/goaoc/solutions/day_5"
+	daySix "github.com/juancortelezzi/goaoc/solutions/day_6"
 )
 
 var dayAndPartToFunc = map[int]func(input string) int{
@@ -25,6 +26,8 @@ var dayAndPartToFunc = map[int]func(input string) int{
 	42: dayFour.PartTwo,
 	51: dayFive.PartOne,
 	52: dayFive.PartTwo,
+	61: daySix.PartOne,
+	62: daySix.PartTwo,
 }
 
 func main() {
@@ -33,25 +36,25 @@ func main() {
 
 	args := flag.Args()
 	if len(args) != 2 {
-		log.Fatalf("Usage: aoc [--test] <day number> <part number>\n")
+		log.Panicf("Usage: aoc [--test] <day number> <part number>\n")
 	}
 
 	day, err := strconv.Atoi(args[0])
 	if err != nil {
-		log.Fatalf("day '%s' can not be converted to integer\n", args[0])
+		log.Panicf("day '%s' can not be converted to integer\n", args[0])
 	}
 
 	if day < 1 || day > 24 {
-		log.Fatalf("day should be between 1 and 24 but got: %d\n", day)
+		log.Panicf("day should be between 1 and 24 but got: %d\n", day)
 	}
 
 	part, err := strconv.Atoi(args[1])
 	if err != nil {
-		log.Fatalf("part '%s' can not be converted to integer\n", args[1])
+		log.Panicf("part '%s' can not be converted to integer\n", args[1])
 	}
 
 	if part != 1 && part != 2 {
-		log.Fatalf("part should be either 1 or 2 but got: '%d'\n", part)
+		log.Panicf("part should be either 1 or 2 but got: '%d'\n", part)
 	}
 
 	var inputFileExtension string
@@ -64,13 +67,13 @@ func main() {
 	inputFilePath := fmt.Sprintf("./inputs/day_%d.%s", day, inputFileExtension)
 	input, err := os.ReadFile(inputFilePath)
 	if err != nil {
-		log.Fatalf("could not read input file: '%s' - %s\n", inputFilePath, err.Error())
+		log.Panicf("could not read input file: '%s' - %s\n", inputFilePath, err.Error())
 	}
 
 	dayAndPart := day*10 + part
 	fn, found := dayAndPartToFunc[dayAndPart]
 	if !found {
-		log.Fatalf("Could not find implementation for day %d part %d\n", day, part)
+		log.Panicf("Could not find implementation for day %d part %d\n", day, part)
 	}
 
 	result := fn(string(input))
