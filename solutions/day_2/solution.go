@@ -13,7 +13,7 @@ func PartOne(input string) int {
 		levels := strings.Split(report, " ")
 
 		if len(levels) == 0 {
-			log.Fatalf("there are no levels in this report: '%s'\n", report)
+			log.Panicf("there are no levels in this report: '%s'\n", report)
 		}
 
 		if len(levels) == 1 {
@@ -26,7 +26,7 @@ func PartOne(input string) int {
 
 		firstLevel, err := strconv.Atoi(levels[0])
 		if err != nil {
-			log.Fatalf("first level of report '%s' is not an int: '%s'", report, levels[0])
+			log.Panicf("first level of report '%s' is not an int: '%s'", report, levels[0])
 		}
 
 		prevLevel := firstLevel
@@ -35,7 +35,7 @@ func PartOne(input string) int {
 		for _, levelString := range levels[1:] {
 			level, err := strconv.Atoi(levelString)
 			if err != nil {
-				log.Fatalf("level of report '%s' is not an int: '%s'", report, levelString)
+				log.Panicf("level of report '%s' is not an int: '%s'", report, levelString)
 			}
 
 			log.Printf("prev: %d | curr: %d\n", prevLevel, level)
@@ -86,7 +86,7 @@ func PartTwo(input string) int {
 		for _, levelString := range levelStrings {
 			level, err := strconv.Atoi(levelString)
 			if err != nil {
-				log.Fatalf("level of report '%s' is not an int: '%s'", reportString, levelString)
+				log.Panicf("level of report '%s' is not an int: '%s'", reportString, levelString)
 			}
 
 			report = append(report, level)
@@ -118,7 +118,7 @@ func isValidReport(report []int) (bool, int) {
 	log.Printf("report: %#v\n", report)
 
 	if len(report) == 0 {
-		log.Fatalf("there are no levels in this report: '%#v'\n", report)
+		log.Panicf("there are no levels in this report: '%#v'\n", report)
 	}
 
 	if len(report) == 1 {

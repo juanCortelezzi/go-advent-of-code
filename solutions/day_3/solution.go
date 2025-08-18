@@ -11,17 +11,17 @@ func parseMul(input string) (int, int) {
 
 	a, b, found := strings.Cut(input, ",")
 	if !found {
-		log.Fatalf("could not find \",\" in input: \"%s\"\n", input)
+		log.Panicf("could not find \",\" in input: \"%s\"\n", input)
 	}
 
 	first, err := strconv.Atoi(a[4:])
 	if err != nil {
-		log.Fatalf("first item of input '%s' is not an int: '%s'", input, a[4:])
+		log.Panicf("first item of input '%s' is not an int: '%s'", input, a[4:])
 	}
 
 	second, err := strconv.Atoi(b[:len(b)-1])
 	if err != nil {
-		log.Fatalf("second item of input '%s' is not an int: '%s'", input, b[:len(b)-1])
+		log.Panicf("second item of input '%s' is not an int: '%s'", input, b[:len(b)-1])
 	}
 
 	return first, second

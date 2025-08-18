@@ -11,7 +11,7 @@ import (
 // if both X and Y are present in the pages to be changed then:
 //     X must be some time before Y
 
-type Input = struct {
+type Input struct {
 	rulesLength int
 	xs          []int
 	ys          []int
@@ -49,7 +49,7 @@ func parseManuals(manuals string) [][]int {
 		for _, pageString := range pageStrings {
 			page, err := strconv.Atoi(pageString)
 			if err != nil {
-				log.Fatalf("page of manual '%s' is not an int: '%s'\n", manualString, pageString)
+				log.Panicf("page of manual '%s' is not an int: '%s'\n", manualString, pageString)
 			}
 			pages = append(pages, page)
 		}
@@ -66,17 +66,17 @@ func parseRules(rules string) ([]int, []int) {
 	for _, ruleString := range ruleStrings {
 		xString, yString, found := strings.Cut(ruleString, "|")
 		if !found {
-			log.Fatalf("could not split x and y from rule: \"%s\"\n", ruleString)
+			log.Panicf("could not split x and y from rule: \"%s\"\n", ruleString)
 		}
 
 		x, err := strconv.Atoi(xString)
 		if err != nil {
-			log.Fatalf("first number of rule '%s' is not an int: '%s'\n", ruleString, xString)
+			log.Panicf("first number of rule '%s' is not an int: '%s'\n", ruleString, xString)
 		}
 
 		y, err := strconv.Atoi(yString)
 		if err != nil {
-			log.Fatalf("second number of rule '%s' is not an int: '%s'\n", ruleString, yString)
+			log.Panicf("second number of rule '%s' is not an int: '%s'\n", ruleString, yString)
 		}
 
 		xs = append(xs, x)

@@ -21,12 +21,12 @@ func getListsFromInput(input string) ([]int, []int) {
 
 		intLeft, err := strconv.Atoi(itemLeft)
 		if err != nil {
-			log.Fatalf("item '%s' can not be converted to integer\n", itemLeft)
+			log.Panicf("item '%s' can not be converted to integer\n", itemLeft)
 		}
 
 		intRight, err := strconv.Atoi(itemRight)
 		if err != nil {
-			log.Fatalf("item '%s' can not be converted to intege\n", itemRight)
+			log.Panicf("item '%s' can not be converted to intege\n", itemRight)
 		}
 
 		listLeft = append(listLeft, intLeft)
@@ -34,7 +34,7 @@ func getListsFromInput(input string) ([]int, []int) {
 	}
 
 	if len(listLeft) != len(listRight) {
-		log.Fatalf(
+		log.Panicf(
 			"list length mismatch: len(listA) = %d and len(listB) = %d\n",
 			len(listLeft),
 			len(listRight),
