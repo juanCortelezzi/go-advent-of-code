@@ -9,10 +9,10 @@ import (
 type direction = int
 
 const (
-	UP direction = iota
-	RIGTH
-	DOWN
-	LEFT
+	up direction = iota
+	right
+	down
+	left
 )
 
 type position struct {
@@ -34,16 +34,14 @@ type lab struct {
 	rowLen    int
 	colLen    int
 	obstacles map[string]struct{}
-	visited   map[string]struct{}
-	player    position
 }
 
-func (lab lab) toString() string {
+func stateToString(lab lab, player position, visited map[string]struct{}) string {
 	str := ""
 	for rowIndex := range lab.rowLen {
 		for colIndex := range lab.colLen {
 			position := position{row: rowIndex, col: colIndex}
-			if position == lab.player {
+			if position == player {
 				str += "^"
 				continue
 			}
@@ -53,7 +51,7 @@ func (lab lab) toString() string {
 				continue
 			}
 
-			if _, hasVisited := lab.visited[position.toString()]; hasVisited {
+			if _, hasVisited := visited[position.toString()]; hasVisited {
 				str += "X"
 				continue
 			}
@@ -66,7 +64,7 @@ func (lab lab) toString() string {
 	return str
 }
 
-func parseInput(input string) lab {
+func parseInput(input string) (lab, position) {
 	labStrings := strings.Split(strings.TrimSpace(input), "\n")
 
 	player := position{}
@@ -89,24 +87,21 @@ func parseInput(input string) lab {
 	visited[player.toString()] = struct{}{}
 
 	return lab{
-		rowLen: len(labStrings),
-		// Lab should always exist, it's a puzzle after all
-		colLen:    len(labStrings[0]),
+		rowLen:    len(labStrings),
+		colLen:    len(labStrings[0]), // Lab should always exist, it's a puzzle after all
 		obstacles: obstacles,
-		player:    player,
-		visited:   visited,
-	}
+	}, player
 }
 
 func getNextPositionInDirection(player position, direction direction) position {
 	switch direction {
-	case UP:
+	case up:
 		return position{row: player.row - 1, col: player.col}
-	case RIGTH:
+	case right:
 		return position{row: player.row, col: player.col + 1}
-	case DOWN:
+	case down:
 		return position{row: player.row + 1, col: player.col}
-	case LEFT:
+	case left:
 		return position{row: player.row, col: player.col - 1}
 	default:
 		log.Printf("there is no such direction as: %d\n", direction)
@@ -116,14 +111,14 @@ func getNextPositionInDirection(player position, direction direction) position {
 
 func turnRight(direction direction) direction {
 	switch direction {
-	case UP:
-		return RIGTH
-	case RIGTH:
-		return DOWN
-	case DOWN:
-		return LEFT
-	case LEFT:
-		return UP
+	case up:
+		return right
+	case right:
+		return down
+	case down:
+		return left
+	case left:
+		return up
 	default:
 		log.Printf("there is no such direction as: %d\n", direction)
 		panic("crash and burn")
@@ -133,32 +128,90 @@ func turnRight(direction direction) direction {
 }
 
 func PartOne(input string) int {
-	lab := parseInput(input)
+	lab, player := parseInput(input)
 	log.Printf("lab: %v\n", lab)
 
-	direction := UP
+	visited := make(map[string]struct{})
+	direction := up
 	for {
-		nextPosition := getNextPositionInDirection(lab.player, direction)
+		nextPosition := getNextPositionInDirection(player, direction)
 		if nextPosition.isOutsideBounds(0, 0, lab.rowLen-1, lab.colLen-1) {
 			log.Printf("next position is out of bounds! %#v\n", nextPosition)
+			fmt.Println(stateToString(lab, player, visited))
 			break
 		}
 
 		if _, isObstacle := lab.obstacles[nextPosition.toString()]; isObstacle {
 			direction = turnRight(direction)
 			log.Printf("changing direction obstacle detected: %#v\n", nextPosition)
-			fmt.Println(lab.toString())
+			fmt.Println(stateToString(lab, player, visited))
 			continue
 		}
 
-		lab.player = nextPosition
-		lab.visited[nextPosition.toString()] = struct{}{}
+		player = nextPosition
+		visited[nextPosition.toString()] = struct{}{}
 	}
 
 	log.Printf("lab: %v\n", lab)
-	return len(lab.visited)
+	return len(visited)
+}
+
+func isLoop(
+	lab lab,
+	player position,
+	playerDirection direction,
+) bool {
+	turnPositionWithDirection := make(map[string]struct{})
+	for {
+		nextPosition := getNextPositionInDirection(player, playerDirection)
+		if nextPosition.isOutsideBounds(0, 0, lab.rowLen-1, lab.colLen-1) {
+			return false
+		}
+
+		if _, isObstacle := lab.obstacles[nextPosition.toString()]; isObstacle {
+			positionWithDirection := fmt.Sprintf("%d-%d-%d", player.row, player.col, playerDirection)
+			if _, hasVisited := turnPositionWithDirection[positionWithDirection]; hasVisited {
+				return true
+			}
+			turnPositionWithDirection[positionWithDirection] = struct{}{}
+			playerDirection = turnRight(playerDirection)
+			continue
+		}
+
+		player = nextPosition
+	}
 }
 
 func PartTwo(input string) int {
-	return 0
+	lab, player := parseInput(input)
+	visited := make(map[string]struct{})
+	direction := up
+	loopPositions := make([]position, 0, 10)
+	for {
+		nextPosition := getNextPositionInDirection(player, direction)
+
+		if nextPosition.isOutsideBounds(0, 0, lab.rowLen-1, lab.colLen-1) {
+			break
+		}
+
+		if _, isObstacle := lab.obstacles[nextPosition.toString()]; isObstacle {
+			direction = turnRight(direction)
+			continue
+		}
+
+		if _, hasVisited := visited[nextPosition.toString()]; !hasVisited {
+			lab.obstacles[nextPosition.toString()] = struct{}{}
+			if isLoop(lab, player, direction) {
+				loopPositions = append(loopPositions, nextPosition)
+			}
+			delete(lab.obstacles, nextPosition.toString())
+		}
+
+		player = nextPosition
+		visited[nextPosition.toString()] = struct{}{}
+	}
+
+	log.Printf("lab: %v\n", lab)
+	log.Printf("loops: %v\n", loopPositions)
+	return len(loopPositions)
 }
