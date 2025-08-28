@@ -65,25 +65,20 @@ func PartOne(input string) int {
 	antinodes := make(map[string]struct{})
 	log.Printf("%v\n", city.antennaGroupedPositions)
 
-	for freq, antennas := range city.antennaGroupedPositions {
+	for _, antennas := range city.antennaGroupedPositions {
 		for antennaAIndex, antennaA := range antennas {
 			for antennaBIndex, antennaB := range antennas {
 				if antennaAIndex == antennaBIndex {
 					continue
 				}
 
-				vecAToB := getPositionVector(antennaA, antennaB)
-				antinode := vec2{row: antennaB.row + vecAToB.row, col: antennaB.col + vecAToB.col}
-				vecBToAntinode := getPositionVector(antennaB, antinode)
-				if vecAToB != vecBToAntinode {
-					log.Panicf("vectors do not match: a(%v) b(%v) vecAToB(%v) vecBToAntinode(%v)\n", antennaA, antennaB, vecAToB, vecBToAntinode)
-				}
+				vec := getPositionVector(antennaA, antennaB)
+				antinode := vec2{row: antennaB.row + vec.row, col: antennaB.col + vec.col}
 
-				if antinode.isOutsideBounds(0, 0, city.rowLen, city.colLen) {
+				if antinode.isOutsideBounds(0, 0, city.rowLen-1, city.colLen-1) {
 					continue
 				}
 
-				log.Printf("(%c) %v - %v = %v -> %v\n", freq, antennaA, antennaB, vecAToB, antinode)
 				antinodes[antinode.toString()] = struct{}{}
 			}
 		}
@@ -93,5 +88,31 @@ func PartOne(input string) int {
 }
 
 func PartTwo(input string) int {
-	return 0
+	city := parseInput(input)
+	antinodes := make(map[string]struct{})
+	log.Printf("%v\n", city.antennaGroupedPositions)
+
+	for _, antennas := range city.antennaGroupedPositions {
+		for antennaAIndex, antennaA := range antennas {
+			for antennaBIndex, antennaB := range antennas {
+				if antennaAIndex == antennaBIndex {
+					continue
+				}
+
+				antinodes[antennaA.toString()] = struct{}{}
+
+				vec := getPositionVector(antennaA, antennaB)
+
+				antinode := vec2{row: antennaB.row + vec.row, col: antennaB.col + vec.col}
+
+				for !antinode.isOutsideBounds(0, 0, city.rowLen-1, city.colLen-1) {
+					antinodes[antinode.toString()] = struct{}{}
+					antinode.row += vec.row
+					antinode.col += vec.col
+				}
+			}
+		}
+	}
+
+	return len(antinodes)
 }
