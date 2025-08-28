@@ -15,6 +15,7 @@ import (
 	daySix "github.com/juancortelezzi/goaoc/solutions/day_6"
 	daySeven "github.com/juancortelezzi/goaoc/solutions/day_7"
 	dayEight "github.com/juancortelezzi/goaoc/solutions/day_8"
+	dayNine "github.com/juancortelezzi/goaoc/solutions/day_9"
 )
 
 var dayAndPartToFunc = map[int]func(input string) int{
@@ -34,6 +35,8 @@ var dayAndPartToFunc = map[int]func(input string) int{
 	72: daySeven.PartTwo,
 	81: dayEight.PartOne,
 	82: dayEight.PartTwo,
+	91: dayNine.PartOne,
+	92: dayNine.PartTwo,
 }
 
 func main() {

@@ -16,12 +16,12 @@ func parseMul(input string) (int, int) {
 
 	first, err := strconv.Atoi(a[4:])
 	if err != nil {
-		log.Panicf("first item of input '%s' is not an int: '%s'", input, a[4:])
+		log.Panicf("first item of input '%s' is not an int: '%s'\n", input, a[4:])
 	}
 
 	second, err := strconv.Atoi(b[:len(b)-1])
 	if err != nil {
-		log.Panicf("second item of input '%s' is not an int: '%s'", input, b[:len(b)-1])
+		log.Panicf("second item of input '%s' is not an int: '%s'\n", input, b[:len(b)-1])
 	}
 
 	return first, second
