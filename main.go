@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	dayOne "github.com/juancortelezzi/goaoc/solutions/day_1"
+	dayTen "github.com/juancortelezzi/goaoc/solutions/day_10"
 	dayTwo "github.com/juancortelezzi/goaoc/solutions/day_2"
 	dayThree "github.com/juancortelezzi/goaoc/solutions/day_3"
 	dayFour "github.com/juancortelezzi/goaoc/solutions/day_4"
@@ -19,24 +20,26 @@ import (
 )
 
 var dayAndPartToFunc = map[int]func(input string) int{
-	11: dayOne.PartOne,
-	12: dayOne.PartTwo,
-	21: dayTwo.PartOne,
-	22: dayTwo.PartTwo,
-	31: dayThree.PartOne,
-	32: dayThree.PartTwo,
-	41: dayFour.PartOne,
-	42: dayFour.PartTwo,
-	51: dayFive.PartOne,
-	52: dayFive.PartTwo,
-	61: daySix.PartOne,
-	62: daySix.PartTwo,
-	71: daySeven.PartOne,
-	72: daySeven.PartTwo,
-	81: dayEight.PartOne,
-	82: dayEight.PartTwo,
-	91: dayNine.PartOne,
-	92: dayNine.PartTwo,
+	11:  dayOne.PartOne,
+	12:  dayOne.PartTwo,
+	21:  dayTwo.PartOne,
+	22:  dayTwo.PartTwo,
+	31:  dayThree.PartOne,
+	32:  dayThree.PartTwo,
+	41:  dayFour.PartOne,
+	42:  dayFour.PartTwo,
+	51:  dayFive.PartOne,
+	52:  dayFive.PartTwo,
+	61:  daySix.PartOne,
+	62:  daySix.PartTwo,
+	71:  daySeven.PartOne,
+	72:  daySeven.PartTwo,
+	81:  dayEight.PartOne,
+	82:  dayEight.PartTwo,
+	91:  dayNine.PartOne,
+	92:  dayNine.PartTwo,
+	101: dayTen.PartOne,
+	102: dayTen.PartTwo,
 }
 
 func main() {
