@@ -85,14 +85,14 @@ func findNextPostions(input inputMap, start vec2) []vec2 {
 	return nextPositions
 }
 
-func getTrailheadScore(input inputMap, seenTrailtails map[vec2]struct{}, trailhead vec2) {
+func getTrailtailsFromTrailheads(input inputMap, seenTrailtails map[vec2]struct{}, trailhead vec2) {
 	currentHeight := input.topography[trailhead.row][trailhead.col]
 	if currentHeight == 9 {
 		seenTrailtails[trailhead] = struct{}{}
 	}
 
 	for _, position := range findNextPostions(input, trailhead) {
-		getTrailheadScore(input, seenTrailtails, position)
+		getTrailtailsFromTrailheads(input, seenTrailtails, position)
 	}
 }
 
@@ -103,7 +103,7 @@ func PartOne(input string) int {
 	result := 0
 	for _, trailhead := range x.trailheads {
 		seenTrailtails := make(map[vec2]struct{})
-		getTrailheadScore(x, seenTrailtails, trailhead)
+		getTrailtailsFromTrailheads(x, seenTrailtails, trailhead)
 		fmt.Println(trailhead, seenTrailtails)
 		result += len(seenTrailtails)
 	}
@@ -111,6 +111,28 @@ func PartOne(input string) int {
 	return result
 }
 
+func getTrailheadScore(input inputMap, trailhead vec2) int {
+	currentHeight := input.topography[trailhead.row][trailhead.col]
+	if currentHeight == 9 {
+		return 1
+	}
+
+	result := 0
+	for _, position := range findNextPostions(input, trailhead) {
+		result += getTrailheadScore(input, position)
+	}
+
+	return result
+}
+
 func PartTwo(input string) int {
-	return 0
+	x := parseInput(input)
+	log.Println(x)
+
+	result := 0
+	for _, trailhead := range x.trailheads {
+		result += getTrailheadScore(x, trailhead)
+	}
+
+	return result
 }
