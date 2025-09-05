@@ -1,7 +1,6 @@
 package day8
 
 import (
-	"fmt"
 	"log"
 	"strings"
 )
@@ -9,10 +8,6 @@ import (
 type vec2 struct {
 	row int
 	col int
-}
-
-func (v vec2) toString() string {
-	return fmt.Sprintf("%d-%d", v.row, v.col)
 }
 
 func (v vec2) isOutsideBounds(minRow, minCol, maxRow, maxCol int) bool {
@@ -62,7 +57,7 @@ func parseInput(input string) city {
 
 func PartOne(input string) int {
 	city := parseInput(input)
-	antinodes := make(map[string]struct{})
+	antinodes := make(map[vec2]struct{})
 	log.Printf("%v\n", city.antennaGroupedPositions)
 
 	for _, antennas := range city.antennaGroupedPositions {
@@ -79,7 +74,7 @@ func PartOne(input string) int {
 					continue
 				}
 
-				antinodes[antinode.toString()] = struct{}{}
+				antinodes[antinode] = struct{}{}
 			}
 		}
 	}
@@ -89,7 +84,7 @@ func PartOne(input string) int {
 
 func PartTwo(input string) int {
 	city := parseInput(input)
-	antinodes := make(map[string]struct{})
+	antinodes := make(map[vec2]struct{})
 	log.Printf("%v\n", city.antennaGroupedPositions)
 
 	for _, antennas := range city.antennaGroupedPositions {
@@ -99,14 +94,14 @@ func PartTwo(input string) int {
 					continue
 				}
 
-				antinodes[antennaA.toString()] = struct{}{}
+				antinodes[antennaA] = struct{}{}
 
 				vec := getPositionVector(antennaA, antennaB)
 
 				antinode := vec2{row: antennaB.row + vec.row, col: antennaB.col + vec.col}
 
 				for !antinode.isOutsideBounds(0, 0, city.rowLen-1, city.colLen-1) {
-					antinodes[antinode.toString()] = struct{}{}
+					antinodes[antinode] = struct{}{}
 					antinode.row += vec.row
 					antinode.col += vec.col
 				}

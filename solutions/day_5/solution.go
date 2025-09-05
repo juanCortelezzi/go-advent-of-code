@@ -21,12 +21,12 @@ type Input struct {
 func parseInput(input string) Input {
 	rulesSection, manualsSection, found := strings.Cut(input, "\n\n")
 	if !found {
-		log.Fatalln("could not split input between rules and manuals")
+		log.Panic("could not split input between rules and manuals")
 	}
 
 	xs, ys := parseRules(rulesSection)
 	if len(xs) != len(ys) {
-		log.Fatalln("xs and ys should be the same length! crash and burn!!")
+		log.Panic("xs and ys should be the same length! crash and burn!!")
 	}
 
 	manuals := parseManuals(manualsSection)

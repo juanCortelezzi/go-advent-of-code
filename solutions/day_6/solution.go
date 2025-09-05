@@ -20,10 +20,6 @@ type position struct {
 	col int
 }
 
-func (p position) toString() string {
-	return fmt.Sprintf("%d-%d", p.row, p.col)
-}
-
 func (p position) isOutsideBounds(minRow, minCol, maxRow, maxCol int) bool {
 	isOutsideRowBounds := p.row < minRow || p.row > maxRow
 	isOutsideColBounds := p.col < minCol || p.col > maxCol
@@ -33,10 +29,10 @@ func (p position) isOutsideBounds(minRow, minCol, maxRow, maxCol int) bool {
 type lab struct {
 	rowLen    int
 	colLen    int
-	obstacles map[string]struct{}
+	obstacles map[position]struct{}
 }
 
-func stateToString(lab lab, player position, visited map[string]struct{}) string {
+func stateToString(lab lab, player position, visited map[position]struct{}) string {
 	str := ""
 	for rowIndex := range lab.rowLen {
 		for colIndex := range lab.colLen {
@@ -46,12 +42,12 @@ func stateToString(lab lab, player position, visited map[string]struct{}) string
 				continue
 			}
 
-			if _, isObstacle := lab.obstacles[position.toString()]; isObstacle {
+			if _, isObstacle := lab.obstacles[position]; isObstacle {
 				str += "#"
 				continue
 			}
 
-			if _, hasVisited := visited[position.toString()]; hasVisited {
+			if _, hasVisited := visited[position]; hasVisited {
 				str += "X"
 				continue
 			}
@@ -68,14 +64,14 @@ func parseInput(input string) (lab, position) {
 	labStrings := strings.Split(strings.TrimSpace(input), "\n")
 
 	player := position{}
-	obstacles := make(map[string]struct{})
-	visited := make(map[string]struct{})
+	obstacles := make(map[position]struct{})
+	visited := make(map[position]struct{})
 
 	for rowIndex, string := range labStrings {
 		for colIndex, item := range string {
 			if item == '#' {
 				obstacle := position{row: rowIndex, col: colIndex}
-				obstacles[obstacle.toString()] = struct{}{}
+				obstacles[obstacle] = struct{}{}
 			}
 			if item == '^' {
 				player.row = rowIndex
@@ -84,7 +80,7 @@ func parseInput(input string) (lab, position) {
 		}
 	}
 
-	visited[player.toString()] = struct{}{}
+	visited[player] = struct{}{}
 
 	return lab{
 		rowLen:    len(labStrings),
@@ -131,7 +127,7 @@ func PartOne(input string) int {
 	lab, player := parseInput(input)
 	log.Printf("lab: %v\n", lab)
 
-	visited := make(map[string]struct{})
+	visited := make(map[position]struct{})
 	direction := up
 	for {
 		nextPosition := getNextPositionInDirection(player, direction)
@@ -141,7 +137,7 @@ func PartOne(input string) int {
 			break
 		}
 
-		if _, isObstacle := lab.obstacles[nextPosition.toString()]; isObstacle {
+		if _, isObstacle := lab.obstacles[nextPosition]; isObstacle {
 			direction = turnRight(direction)
 			log.Printf("changing direction obstacle detected: %#v\n", nextPosition)
 			fmt.Println(stateToString(lab, player, visited))
@@ -149,7 +145,7 @@ func PartOne(input string) int {
 		}
 
 		player = nextPosition
-		visited[nextPosition.toString()] = struct{}{}
+		visited[nextPosition] = struct{}{}
 	}
 
 	log.Printf("lab: %v\n", lab)
@@ -168,7 +164,7 @@ func isLoop(
 			return false
 		}
 
-		if _, isObstacle := lab.obstacles[nextPosition.toString()]; isObstacle {
+		if _, isObstacle := lab.obstacles[nextPosition]; isObstacle {
 			positionWithDirection := fmt.Sprintf("%d-%d-%d", player.row, player.col, playerDirection)
 			if _, hasVisited := turnPositionWithDirection[positionWithDirection]; hasVisited {
 				return true
@@ -184,7 +180,7 @@ func isLoop(
 
 func PartTwo(input string) int {
 	lab, player := parseInput(input)
-	visited := make(map[string]struct{})
+	visited := make(map[position]struct{})
 	direction := up
 	loopPositions := make([]position, 0, 10)
 	for {
@@ -194,21 +190,21 @@ func PartTwo(input string) int {
 			break
 		}
 
-		if _, isObstacle := lab.obstacles[nextPosition.toString()]; isObstacle {
+		if _, isObstacle := lab.obstacles[nextPosition]; isObstacle {
 			direction = turnRight(direction)
 			continue
 		}
 
-		if _, hasVisited := visited[nextPosition.toString()]; !hasVisited {
-			lab.obstacles[nextPosition.toString()] = struct{}{}
+		if _, hasVisited := visited[nextPosition]; !hasVisited {
+			lab.obstacles[nextPosition] = struct{}{}
 			if isLoop(lab, player, direction) {
 				loopPositions = append(loopPositions, nextPosition)
 			}
-			delete(lab.obstacles, nextPosition.toString())
+			delete(lab.obstacles, nextPosition)
 		}
 
 		player = nextPosition
-		visited[nextPosition.toString()] = struct{}{}
+		visited[nextPosition] = struct{}{}
 	}
 
 	log.Printf("lab: %v\n", lab)
