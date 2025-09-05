@@ -7,42 +7,42 @@ import (
 	"os"
 	"strconv"
 
-	dayOne "github.com/juancortelezzi/goaoc/solutions/day_1"
-	dayTen "github.com/juancortelezzi/goaoc/solutions/day_10"
-	dayEleven "github.com/juancortelezzi/goaoc/solutions/day_11"
-	dayTwo "github.com/juancortelezzi/goaoc/solutions/day_2"
-	dayThree "github.com/juancortelezzi/goaoc/solutions/day_3"
-	dayFour "github.com/juancortelezzi/goaoc/solutions/day_4"
-	dayFive "github.com/juancortelezzi/goaoc/solutions/day_5"
-	daySix "github.com/juancortelezzi/goaoc/solutions/day_6"
-	daySeven "github.com/juancortelezzi/goaoc/solutions/day_7"
-	dayEight "github.com/juancortelezzi/goaoc/solutions/day_8"
-	dayNine "github.com/juancortelezzi/goaoc/solutions/day_9"
+	"github.com/juancortelezzi/goaoc/solutions/day_1"
+	"github.com/juancortelezzi/goaoc/solutions/day_10"
+	"github.com/juancortelezzi/goaoc/solutions/day_11"
+	"github.com/juancortelezzi/goaoc/solutions/day_2"
+	"github.com/juancortelezzi/goaoc/solutions/day_3"
+	"github.com/juancortelezzi/goaoc/solutions/day_4"
+	"github.com/juancortelezzi/goaoc/solutions/day_5"
+	"github.com/juancortelezzi/goaoc/solutions/day_6"
+	"github.com/juancortelezzi/goaoc/solutions/day_7"
+	"github.com/juancortelezzi/goaoc/solutions/day_8"
+	"github.com/juancortelezzi/goaoc/solutions/day_9"
 )
 
 var dayAndPartToFunc = map[int]func(input string) int{
-	11:  dayOne.PartOne,
-	12:  dayOne.PartTwo,
-	21:  dayTwo.PartOne,
-	22:  dayTwo.PartTwo,
-	31:  dayThree.PartOne,
-	32:  dayThree.PartTwo,
-	41:  dayFour.PartOne,
-	42:  dayFour.PartTwo,
-	51:  dayFive.PartOne,
-	52:  dayFive.PartTwo,
-	61:  daySix.PartOne,
-	62:  daySix.PartTwo,
-	71:  daySeven.PartOne,
-	72:  daySeven.PartTwo,
-	81:  dayEight.PartOne,
-	82:  dayEight.PartTwo,
-	91:  dayNine.PartOne,
-	92:  dayNine.PartTwo,
-	101: dayTen.PartOne,
-	102: dayTen.PartTwo,
-	111: dayEleven.PartOne,
-	112: dayEleven.PartTwo,
+	11:  day1.PartOne,
+	12:  day1.PartTwo,
+	21:  day2.PartOne,
+	22:  day2.PartTwo,
+	31:  day3.PartOne,
+	32:  day3.PartTwo,
+	41:  day4.PartOne,
+	42:  day4.PartTwo,
+	51:  day5.PartOne,
+	52:  day5.PartTwo,
+	61:  day6.PartOne,
+	62:  day6.PartTwo,
+	71:  day7.PartOne,
+	72:  day7.PartTwo,
+	81:  day8.PartOne,
+	82:  day8.PartTwo,
+	91:  day9.PartOne,
+	92:  day9.PartTwo,
+	101: day10.PartOne,
+	102: day10.PartTwo,
+	111: day11.PartOne,
+	112: day11.PartTwo,
 }
 
 func main() {

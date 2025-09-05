@@ -1,4 +1,4 @@
-package dayNine
+package day9
 
 import (
 	"log"
