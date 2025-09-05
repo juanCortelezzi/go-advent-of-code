@@ -6,15 +6,15 @@ import (
 	"strings"
 )
 
-func parseInput(input string) []int {
+func parseInput(input string) map[int]int {
 	stoneStrings := strings.Split(strings.TrimSpace(input), " ")
-	stones := make([]int, 0, len(stoneStrings))
+	stones := make(map[int]int)
 	for _, stoneString := range stoneStrings {
 		stone, err := strconv.Atoi(stoneString)
 		if err != nil {
 			log.Panicf("stone '%s' can not be converted to integer", stoneString)
 		}
-		stones = append(stones, stone)
+		stones[stone] += 1
 	}
 
 	return stones
@@ -52,35 +52,65 @@ func splitFirstNDigitsString(num, n int) (int, int) {
 	return firstPart, secondPart
 }
 
+func updateStone(stone int) []int {
+	newStones := make([]int, 0, 2)
+	if stone == 0 {
+		newStones = append(newStones, 1)
+		return newStones
+	}
+
+	numberOfDigits := getNumberOfDigits(stone)
+	hasEvenNumberOfDigits := (numberOfDigits & 1) == 0
+	if hasEvenNumberOfDigits {
+		splitStoneA, splitStoneB := splitFirstNDigitsString(stone, numberOfDigits>>1)
+		newStones = append(newStones, splitStoneA, splitStoneB)
+		return newStones
+	}
+
+	newStones = append(newStones, stone*2024)
+	return newStones
+}
+
 func PartOne(input string) int {
 	stones := parseInput(input)
 
 	for range 25 {
-		newStones := make([]int, 0, len(stones)*2)
-
-		for _, stone := range stones {
-			if stone == 0 {
-				newStones = append(newStones, 1)
-				continue
+		newStones := make(map[int]int, len(stones))
+		for stone, currentQuantity := range stones {
+			for _, newStone := range updateStone(stone) {
+				newStones[newStone] += currentQuantity
 			}
-
-			numberOfDigits := getNumberOfDigits(stone)
-			hasEvenNumberOfDigits := (numberOfDigits & 1) == 0
-			if hasEvenNumberOfDigits {
-				splitStoneA, splitStoneB := splitFirstNDigitsString(stone, numberOfDigits>>1)
-				newStones = append(newStones, splitStoneA, splitStoneB)
-				continue
-			}
-
-			newStones = append(newStones, stone*2024)
 		}
 
 		stones = newStones
 	}
 
-	return len(stones)
+	result := 0
+	for _, value := range stones {
+		result += value
+	}
+
+	return result
 }
 
 func PartTwo(input string) int {
-	return 0
+	stones := parseInput(input)
+
+	for range 75 {
+		newStones := make(map[int]int, len(stones))
+		for stone, currentQuantity := range stones {
+			for _, newStone := range updateStone(stone) {
+				newStones[newStone] += currentQuantity
+			}
+		}
+
+		stones = newStones
+	}
+
+	result := 0
+	for _, value := range stones {
+		result += value
+	}
+
+	return result
 }
